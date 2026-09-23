@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  html {
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+  body {
+    background: theme("colors.paper");
+    color: theme("colors.ink.DEFAULT");
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* ---------- Book / pages ---------- */
+  .book {
+    display: flex;
+    height: 100dvh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .page {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: calc(var(--safe-top) + 68px) 16px 120px;
+  }
+  .page-hanoi {
+    --accent: theme("colors.han.DEFAULT");
+    --accent-deep: theme("colors.han.deep");
+    --tint: theme("colors.han.tint");
+  }
+  .page-sapa {
+    --accent: theme("colors.sapa.DEFAULT");
+    --accent-deep: theme("colors.sapa.deep");
+    --tint: theme("colors.sapa.tint");
+  }
+
+  /* ---------- Ticket header ---------- */
+  .ticket {
+    position: relative;
+    background: var(--accent);
+    color: #fbf7ee;
+    border-radius: theme("borderRadius.card");
+    padding: 16px 18px 14px;
+    box-shadow: theme("boxShadow.card");
+    overflow: hidden;
+  }
+  .ticket::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 34px;
+    height: 0;
+    border-top: 2px dashed rgba(251, 247, 238, 0.4);
+  }
+  .ticket .punch {
+    position: absolute;
+    bottom: 24px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: theme("colors.paper");
+  }
+  .ticket .punch-l {
+    left: -10px;
+  }
+  .ticket .punch-r {
+    right: -10px;
+  }
+
+  /* ---------- Time blocks ---------- */
+  .block-head::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: theme("colors.line");
+  }
+  .time-chip {
+    color: var(--accent-deep);
+    background: var(--tint);
+    border: 1px solid theme("colors.line");
+  }
+
+  .transit {
+    background: var(--tint);
+    border: 1px dashed var(--accent);
+    border-radius: theme("borderRadius.card");
+  }
+
+  /* ---------- Cards ---------- */
+  .activity-card {
+    background: theme("colors.white");
+    border: 1.5px solid theme("colors.line");
+    border-radius: theme("borderRadius.card");
+    box-shadow: theme("boxShadow.card");
+  }
+  .activity-card .expandbar {
+    background: var(--tint);
+    border-top: 1px dashed theme("colors.line");
+    color: var(--accent-deep);
+  }
+  .activity-card .arrow {
+    transition: transform 0.2s;
+  }
+  .activity-card.expanded .arrow {
+    transform: rotate(180deg);
+  }
+
+  .gallery-imgs {
+    scroll-snap-type: x proximity;
+  }
+  .gallery-imgs img {
+    scroll-snap-align: start;
+  }
+  .gallery-more {
+    color: var(--accent-deep);
+    border-bottom: 1.5px solid var(--accent);
+  }
+
+  /* ---------- Pager dots ---------- */
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #cfc6b4;
+    transition: all 0.2s;
+  }
+  .dot.on {
+    width: 20px;
+    border-radius: 999px;
+    background: theme("colors.ink.DEFAULT");
+  }
+
+  /* ---------- Pager nav buttons ---------- */
+  .pager-nav {
+    background: rgba(0, 0, 0, 0.06);
+    color: theme("colors.ink.DEFAULT");
+  }
+  .pager-nav:not(:disabled):hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.focus-ring:focus-visible {
+  outline: 3px solid theme("colors.han.gold");
+  outline-offset: 2px;
+}
