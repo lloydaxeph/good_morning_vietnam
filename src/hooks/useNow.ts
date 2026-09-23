@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 const TICK_MS = 30_000;
 
 /**
- * Current time in ms, refreshed every 30s. In dev, `?now=<ISO date>` in the
- * URL pins the clock for testing.
+ * Current time in ms, refreshed every 30s. `?now=<ISO date>` in the URL pins
+ * the clock for testing, in dev and production alike.
  */
 export function useNow(): number {
   const [override] = useState(() => {
-    if (!import.meta.env.DEV) return null;
     const raw = new URLSearchParams(window.location.search).get("now");
     const ms = raw ? Date.parse(raw) : NaN;
     return Number.isNaN(ms) ? null : ms;

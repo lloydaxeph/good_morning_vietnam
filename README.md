@@ -22,7 +22,7 @@ npm run dev:server     # API on :3000
 npm run dev            # Vite on :5173, proxies /api to :3000
 ```
 
-In dev, append `?now=2026-11-05T19:00+07:00` to `/` to pin the clock for testing.
+Append `?now=2026-11-05T19:00%2B07:00` to `/` to pin the clock for testing (works in dev and production).
 
 Production build: `npm run build && npm start` (serves `dist/` + API on `PORT`).
 
