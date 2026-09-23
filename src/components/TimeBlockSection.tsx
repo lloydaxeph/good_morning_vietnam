@@ -6,11 +6,19 @@ import { TransitStrip } from "./TransitStrip";
 interface TimeBlockSectionProps {
   block: TimeBlock;
   city: City;
+  id?: string;
+  /** Outlines the block, e.g. when it was opened from a link */
+  highlighted?: boolean;
 }
 
-export function TimeBlockSection({ block, city }: TimeBlockSectionProps) {
+export function TimeBlockSection({ block, city, id, highlighted = false }: TimeBlockSectionProps) {
   return (
-    <div className="mt-[22px]">
+    <div
+      id={id}
+      className={`mt-[22px] scroll-mt-[calc(var(--safe-top)+76px)] ${
+        highlighted ? "rounded-card outline outline-2 outline-offset-4 outline-[var(--accent)]" : ""
+      }`}
+    >
       <div className="block-head flex items-center gap-2.5 mb-2.5">
         <span className="time-chip font-mono text-xs font-bold tracking-wide rounded-lg px-2.5 py-1.5 whitespace-nowrap">
           {formatBlockTime(block)}

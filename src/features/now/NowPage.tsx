@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { CityPage } from "../../components/CityPage";
-import { TicketHeader } from "../../components/TicketHeader";
-import { TimeBlockSection } from "../../components/TimeBlockSection";
 import { TopBar } from "../../components/TopBar";
 import { useTripStatus } from "../../hooks/useTripStatus";
 import { itineraryLink } from "../../lib/itineraryLink";
+import { CurrentCard } from "./CurrentCard";
 import { PrevNextFooter } from "./PrevNextFooter";
 import { TripMessage } from "./TripMessage";
 
@@ -42,16 +40,14 @@ export default function NowPage() {
 
   const { shown, isNow, prev, next } = status;
 
+  const cityClass = shown.day.city === "Sapa" ? "page-sapa" : "page-hanoi";
+
   return (
-    <div className="h-dvh animate-fade-in">
+    <div className={`h-dvh animate-fade-in ${cityClass}`}>
       <TopBar linkTo={itineraryLink(shown.dayIndex)} linkLabel="Itinerary" />
-      <CityPage city={shown.day.city}>
-        <TicketHeader day={shown.day} dayNumber={shown.dayIndex + 1} />
-        <div className="mt-5 -mb-3 text-[11px] tracking-[.14em] uppercase text-ink-soft">
-          {isNow ? "Happening now" : "Free time · Up next"}
-        </div>
-        <TimeBlockSection block={shown.block} city={shown.day.city} />
-      </CityPage>
+      <main className="h-full flex flex-col px-4 pt-[calc(var(--safe-top)+68px)] pb-[calc(env(safe-area-inset-bottom,0px)+100px)]">
+        <CurrentCard entry={shown} isNow={isNow} />
+      </main>
       <PrevNextFooter prev={prev} next={next} />
     </div>
   );

@@ -1,10 +1,13 @@
 import { forwardRef, useImperativeHandle, useLayoutEffect, useRef } from "react";
+import { blockElementId } from "../../lib/itineraryLink";
 import type { Day } from "../../types";
 import { DayPage } from "./DayPage";
 
 interface BookProps {
   days: Day[];
   initialIndex: number;
+  /** 0-based block on the initial day to scroll to and highlight, or null for none */
+  focusBlock: number | null;
   onPageChange: (index: number) => void;
 }
 
@@ -12,17 +15,25 @@ export interface BookHandle {
   goTo: (index: number) => void;
 }
 
-/** Horizontally swipeable day pages; opens at `initialIndex` without animation. */
+/**
+ * Horizontally swipeable day pages; opens at `initialIndex` without animation,
+ * scrolled down to `focusBlock` on that day when given.
+ */
 export const Book = forwardRef<BookHandle, BookProps>(function Book(
-  { days, initialIndex, onPageChange },
+  { days, initialIndex, focusBlock, onPageChange },
   ref,
 ) {
   const elRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const el = elRef.current;
-    if (el) el.scrollLeft = initialIndex * el.clientWidth;
-  }, [initialIndex]);
+    if (!el) return;
+    el.scrollLeft = initialIndex * el.clientWidth;
+    if (focusBlock === null) return;
+    document
+      .getElementById(blockElementId(initialIndex, focusBlock))
+      ?.scrollIntoView({ block: "start", inline: "nearest" });
+  }, [initialIndex, focusBlock]);
 
   useImperativeHandle(ref, () => ({
     goTo(index: number) {
@@ -47,7 +58,12 @@ export const Book = forwardRef<BookHandle, BookProps>(function Book(
       onScroll={handleScroll}
     >
       {days.map((day, i) => (
-        <DayPage key={day.date} day={day} dayIndex={i} />
+        <DayPage
+          key={day.date}
+          day={day}
+          dayIndex={i}
+          highlightBlock={i === initialIndex ? focusBlock : null}
+        />
       ))}
     </div>
   );

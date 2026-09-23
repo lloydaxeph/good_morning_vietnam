@@ -1,14 +1,17 @@
 import { CityPage } from "../../components/CityPage";
 import { TicketHeader } from "../../components/TicketHeader";
 import { TimeBlockSection } from "../../components/TimeBlockSection";
+import { blockElementId } from "../../lib/itineraryLink";
 import type { Day } from "../../types";
 
 interface DayPageProps {
   day: Day;
   dayIndex: number;
+  /** 0-based block to highlight as the one linked to, or null for none */
+  highlightBlock: number | null;
 }
 
-export function DayPage({ day, dayIndex }: DayPageProps) {
+export function DayPage({ day, dayIndex, highlightBlock }: DayPageProps) {
   return (
     <CityPage city={day.city}>
       <TicketHeader day={day} dayNumber={dayIndex + 1} />
@@ -17,7 +20,13 @@ export function DayPage({ day, dayIndex }: DayPageProps) {
         dangerouslySetInnerHTML={{ __html: day.note }}
       />
       {day.blocks.map((block, blockIndex) => (
-        <TimeBlockSection key={blockIndex} block={block} city={day.city} />
+        <TimeBlockSection
+          key={blockIndex}
+          id={blockElementId(dayIndex, blockIndex)}
+          block={block}
+          city={day.city}
+          highlighted={blockIndex === highlightBlock}
+        />
       ))}
     </CityPage>
   );

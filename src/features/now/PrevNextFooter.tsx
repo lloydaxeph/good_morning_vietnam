@@ -13,7 +13,7 @@ function NeighbourCard({ entry, direction }: { entry: ScheduledBlock | null; dir
   const isNext = direction === "next";
   return (
     <Link
-      to={itineraryLink(entry.dayIndex)}
+      to={itineraryLink(entry.dayIndex, entry.blockIndex)}
       className={`focus-ring flex-1 min-w-0 flex flex-col gap-0.5 rounded-card bg-white border border-line shadow-card px-3 py-2.5 active:scale-[.98] ${
         isNext ? "text-right" : "text-left"
       }`}
