@@ -58,6 +58,11 @@
     --accent-deep: theme("colors.sapa.deep");
     --tint: theme("colors.sapa.tint");
   }
+  .page-ninh {
+    --accent: theme("colors.ninh.DEFAULT");
+    --accent-deep: theme("colors.ninh.deep");
+    --tint: theme("colors.ninh.tint");
+  }
 
   /* ---------- Ticket header ---------- */
   .ticket {

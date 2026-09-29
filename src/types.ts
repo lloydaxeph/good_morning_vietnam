@@ -1,4 +1,4 @@
-export type City = "Hanoi" | "Sapa";
+export type City = "Hanoi" | "Sapa" | "Ninh Binh";
 
 export interface Activity {
   n: string; // name
@@ -16,7 +16,9 @@ export interface TimeBlock {
   end: string;
   label: string;
   transit?: string;
-  item: Activity;
+  items: Activity[];
+  /** False when this block's plan is still undecided; omitted/true means confirmed. */
+  confirmed?: boolean;
 }
 
 export interface Day {

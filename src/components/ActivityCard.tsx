@@ -5,9 +5,11 @@ import { Gallery } from "./Gallery";
 interface ActivityCardProps {
   activity: Activity;
   city: City;
+  /** Greys out the card and blocks expand/links when the plan isn't confirmed yet */
+  disabled?: boolean;
 }
 
-export function ActivityCard({ activity, city }: ActivityCardProps) {
+export function ActivityCard({ activity, city, disabled = false }: ActivityCardProps) {
   const [expanded, setExpanded] = useState(false);
   const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(
     `${activity.n} ${city} Vietnam`,
@@ -17,19 +19,22 @@ export function ActivityCard({ activity, city }: ActivityCardProps) {
     : null;
 
   function toggleExpand() {
+    if (disabled) return;
     setExpanded((v) => !v);
   }
 
   return (
     <div
-      className={`activity-card focus-ring flex flex-wrap items-stretch gap-2.5 rounded-card p-3 mb-2.5 cursor-pointer select-none ${
-        expanded ? "expanded" : ""
-      }`}
+      className={`activity-card focus-ring flex flex-wrap items-stretch gap-2.5 rounded-card p-3 mb-2.5 select-none ${
+        disabled ? "opacity-50 grayscale cursor-not-allowed" : "cursor-pointer"
+      } ${expanded ? "expanded" : ""}`}
       role="button"
-      tabIndex={0}
+      tabIndex={disabled ? -1 : 0}
       aria-expanded={expanded}
+      aria-disabled={disabled}
       onClick={toggleExpand}
       onKeyDown={(e) => {
+        if (disabled) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           toggleExpand();
@@ -56,7 +61,7 @@ export function ActivityCard({ activity, city }: ActivityCardProps) {
         <div className="text-[15px] font-bold leading-tight">{activity.n}</div>
         <div className="text-[12.5px] leading-snug text-ink-soft">{activity.d}</div>
         <div className="flex items-center gap-2.5 flex-wrap">
-          {googleMapsUrl && (
+          {googleMapsUrl && !disabled && (
             <a
               href={googleMapsUrl}
               target="_blank"
@@ -67,7 +72,7 @@ export function ActivityCard({ activity, city }: ActivityCardProps) {
               Open in maps 📍
             </a>
           )}
-          {activity.website && (
+          {activity.website && !disabled && (
             <a
               href={activity.website}
               target="_blank"
@@ -81,12 +86,13 @@ export function ActivityCard({ activity, city }: ActivityCardProps) {
         </div>
       </div>
 
-      {expanded && (
+      {expanded && !disabled && (
         <div className="basis-full">
           <Gallery name={activity.n} images={activity.im ?? []} googleImagesUrl={googleImagesUrl} />
         </div>
       )}
 
+      {!disabled && (
       <div
         className="expandbar basis-full flex items-center justify-center gap-1.5 min-h-[26px] -mx-3 -mb-3 mt-1.5 rounded-b-[12px]"
         aria-hidden="true"
@@ -94,6 +100,7 @@ export function ActivityCard({ activity, city }: ActivityCardProps) {
         <span className="text-[11px] font-semibold">Images</span>
         <span className="arrow text-[8px]">▼</span>
       </div>
+      )}
     </div>
   );
 }

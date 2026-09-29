@@ -12,6 +12,8 @@ interface TimeBlockSectionProps {
 }
 
 export function TimeBlockSection({ block, city, id, highlighted = false }: TimeBlockSectionProps) {
+  const confirmed = block.confirmed !== false;
+
   return (
     <div
       id={id}
@@ -26,7 +28,9 @@ export function TimeBlockSection({ block, city, id, highlighted = false }: TimeB
         <span className="text-[13px] text-ink-soft">{block.label}</span>
       </div>
       {block.transit && <TransitStrip text={block.transit} />}
-      <ActivityCard activity={block.item} city={city} />
+      {block.items.map((activity, i) => (
+        <ActivityCard key={i} activity={activity} city={city} disabled={!confirmed} />
+      ))}
     </div>
   );
 }

@@ -40,7 +40,7 @@ export default function NowPage() {
 
   const { shown, isNow, prev, next } = status;
 
-  const cityClass = shown.day.city === "Sapa" ? "page-sapa" : "page-hanoi";
+  const cityClass = shown.day.city === "Sapa" ? "page-sapa" : shown.day.city === "Ninh Binh" ? "page-ninh" : "page-hanoi";
 
   return (
     <div className={`h-dvh animate-fade-in ${cityClass}`}>

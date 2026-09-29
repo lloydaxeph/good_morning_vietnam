@@ -21,7 +21,7 @@ function NeighbourCard({ entry, direction }: { entry: ScheduledBlock | null; dir
       <span className="text-[10px] tracking-[.14em] uppercase text-ink-soft">
         {isNext ? "Next ›" : "‹ Previous"}
       </span>
-      <span className="text-[13px] font-bold leading-tight truncate">{entry.block.item.n}</span>
+      <span className="text-[13px] font-bold leading-tight truncate">{entry.block.items[0].n}</span>
     </Link>
   );
 }

@@ -8,7 +8,8 @@ export default {
         ink: { DEFAULT: "#26221C", soft: "#6E675C" },
         line: "#E2DACA",
         han: { DEFAULT: "#A62B24", deep: "#7C1F1A", tint: "#FBEFE9", gold: "#C9962E" },
-        sapa: { DEFAULT: "#2F6B5C", deep: "#204F44", tint: "#EBF2EE", gold: "#8AA84F" },
+        sapa: { DEFAULT: "#3A7A3E", deep: "#28592C", tint: "#EDF3E8", gold: "#8AA84F" },
+        ninh: { DEFAULT: "#2A5C8A", deep: "#1D4165", tint: "#E9F0F7", gold: "#5B8FB3" },
       },
       borderRadius: {
         card: "14px",

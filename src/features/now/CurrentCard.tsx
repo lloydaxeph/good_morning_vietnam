@@ -15,7 +15,7 @@ const linkClass =
 /** Full-height hero card for the block shown on the Now page; clicking it opens that block in the itinerary. */
 export function CurrentCard({ entry, isNow }: CurrentCardProps) {
   const { block, day, dayIndex, blockIndex } = entry;
-  const { item } = block;
+  const [item] = block.items;
   const googleMapsUrl = item.loc
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.loc)}`
     : null;
