@@ -73,6 +73,23 @@ export function ActivityCard({
           placeholder="Website (optional)"
           className={fieldClass}
         />
+        <input
+          type="text"
+          value={activity.thumb ?? ""}
+          onChange={(e) => patch({ thumb: e.target.value || undefined })}
+          placeholder="Photo URL (optional)"
+          className={fieldClass}
+        />
+        {activity.thumb && (
+          <div className="w-16 h-16 rounded-lg overflow-hidden bg-black/[.06]">
+            <img
+              src={activity.thumb}
+              alt=""
+              onError={(e) => e.currentTarget.remove()}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         {activityCount > 1 && (
           <button
             type="button"
