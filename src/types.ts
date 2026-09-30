@@ -7,6 +7,7 @@ export interface Activity {
   loc?: string; // Google Maps query or place link
   thumb?: string; // thumbnail image url
   website?: string; // official website url
+  slideshow?: boolean; // include thumb in the home page slideshow
 }
 
 export interface TimeBlock {

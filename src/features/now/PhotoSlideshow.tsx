@@ -21,7 +21,7 @@ function collectPhotoUrls(days: Day[]): string[] {
   for (const day of days) {
     for (const block of day.blocks) {
       for (const item of block.items) {
-        if (item.thumb) urls.push(item.thumb);
+        if (item.thumb && item.slideshow) urls.push(item.thumb);
       }
     }
   }

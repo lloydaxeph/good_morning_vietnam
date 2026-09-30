@@ -7,6 +7,7 @@ export interface Activity {
   loc?: string;
   thumb?: string;
   website?: string;
+  slideshow?: boolean;
 }
 
 export interface TimeBlock {

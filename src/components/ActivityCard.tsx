@@ -73,13 +73,23 @@ export function ActivityCard({
           className={fieldClass}
         />
         {activity.thumb && (
-          <div className="w-16 h-16 rounded-lg overflow-hidden bg-black/[.06]">
-            <img
-              src={activity.thumb}
-              alt=""
-              onError={(e) => e.currentTarget.remove()}
-              className="w-full h-full object-cover"
-            />
+          <div className="flex items-center gap-2.5">
+            <div className="w-16 h-16 rounded-lg overflow-hidden bg-black/[.06] flex-none">
+              <img
+                src={activity.thumb}
+                alt=""
+                onError={(e) => e.currentTarget.remove()}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <label className="flex items-center gap-1.5 text-[12.5px]">
+              <input
+                type="checkbox"
+                checked={activity.slideshow ?? false}
+                onChange={(e) => patch({ slideshow: e.target.checked || undefined })}
+              />
+              Show in home slideshow
+            </label>
           </div>
         )}
         {activityCount > 1 && (

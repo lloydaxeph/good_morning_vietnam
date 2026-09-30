@@ -14,6 +14,7 @@ function isActivity(v: unknown): v is Activity {
   if (a.loc !== undefined && !isString(a.loc)) return false;
   if (a.thumb !== undefined && !isString(a.thumb)) return false;
   if (a.website !== undefined && !isString(a.website)) return false;
+  if (a.slideshow !== undefined && typeof a.slideshow !== "boolean") return false;
   return true;
 }
 
