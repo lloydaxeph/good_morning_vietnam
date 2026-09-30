@@ -59,9 +59,10 @@ export const Book = forwardRef<BookHandle, BookProps>(function Book(
     >
       {days.map((day, i) => (
         <DayPage
-          key={day.date}
+          key={i}
           day={day}
           dayIndex={i}
+          dayCount={days.length}
           highlightBlock={i === initialIndex ? focusBlock : null}
         />
       ))}

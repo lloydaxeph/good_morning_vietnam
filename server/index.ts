@@ -3,6 +3,8 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { credentialsMatch, issueToken, verifyToken } from "./auth.js";
+import { getDays, setDays } from "./db.js";
+import { isValidDays } from "./validateDays.js";
 
 if (existsSync(".env")) process.loadEnvFile(".env");
 
@@ -22,7 +24,7 @@ const distDir = path.join(rootDir, "dist");
 
 const app = express();
 app.disable("x-powered-by");
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "2mb" }));
 
 app.post("/api/admin/login", (req, res) => {
   const { username, password } = (req.body ?? {}) as { username?: unknown; password?: unknown };
@@ -45,6 +47,38 @@ app.get("/api/admin/me", (req, res) => {
     return;
   }
   res.json({ username: ADMIN_USERNAME });
+});
+
+function requireAdmin(req: express.Request, res: express.Response): boolean {
+  const header = req.get("authorization") ?? "";
+  const token = header.startsWith("Bearer ") ? header.slice(7) : "";
+  if (!verifyToken(token, SESSION_SECRET)) {
+    res.status(401).json({ error: "Not logged in." });
+    return false;
+  }
+  return true;
+}
+
+app.get("/api/days", async (_req, res) => {
+  try {
+    res.json(await getDays());
+  } catch {
+    res.status(500).json({ error: "Couldn't load the itinerary." });
+  }
+});
+
+app.put("/api/days", async (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  if (!isValidDays(req.body)) {
+    res.status(400).json({ error: "Malformed itinerary data." });
+    return;
+  }
+  try {
+    await setDays(req.body);
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: "Couldn't save the itinerary." });
+  }
 });
 
 app.use("/api", (_req, res) => {

@@ -1,4 +1,4 @@
-async function readError(res: Response, fallback: string): Promise<string> {
+export async function readError(res: Response, fallback: string): Promise<string> {
   try {
     const body = (await res.json()) as { error?: string };
     return body.error ?? fallback;

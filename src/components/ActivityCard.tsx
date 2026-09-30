@@ -1,16 +1,30 @@
 import { useState } from "react";
+import { useEdit } from "../features/itinerary/EditContext";
 import type { Activity, City } from "../types";
 import { Gallery } from "./Gallery";
 
 interface ActivityCardProps {
   activity: Activity;
   city: City;
+  dayIndex: number;
+  blockIndex: number;
+  activityIndex: number;
+  activityCount: number;
   /** Greys out the card and blocks expand/links when the plan isn't confirmed yet */
   disabled?: boolean;
 }
 
-export function ActivityCard({ activity, city, disabled = false }: ActivityCardProps) {
+export function ActivityCard({
+  activity,
+  city,
+  dayIndex,
+  blockIndex,
+  activityIndex,
+  activityCount,
+  disabled = false,
+}: ActivityCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const { editing, updateActivity, removeActivity } = useEdit();
   const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(
     `${activity.n} ${city} Vietnam`,
   )}`;
@@ -21,6 +35,55 @@ export function ActivityCard({ activity, city, disabled = false }: ActivityCardP
   function toggleExpand() {
     if (disabled) return;
     setExpanded((v) => !v);
+  }
+
+  function patch(fields: Partial<Activity>) {
+    updateActivity(dayIndex, blockIndex, activityIndex, fields);
+  }
+
+  if (editing) {
+    const fieldClass = "focus-ring w-full rounded-md border border-line px-2 py-1.5 text-[13px]";
+    return (
+      <div className="rounded-card p-3 mb-2.5 border border-line bg-white flex flex-col gap-1.5">
+        <input
+          type="text"
+          value={activity.n}
+          onChange={(e) => patch({ n: e.target.value })}
+          placeholder="Name"
+          className={`${fieldClass} font-bold`}
+        />
+        <textarea
+          value={activity.d}
+          onChange={(e) => patch({ d: e.target.value })}
+          placeholder="Description"
+          rows={2}
+          className={fieldClass}
+        />
+        <input
+          type="text"
+          value={activity.loc ?? ""}
+          onChange={(e) => patch({ loc: e.target.value || undefined })}
+          placeholder="Location (optional)"
+          className={fieldClass}
+        />
+        <input
+          type="text"
+          value={activity.website ?? ""}
+          onChange={(e) => patch({ website: e.target.value || undefined })}
+          placeholder="Website (optional)"
+          className={fieldClass}
+        />
+        {activityCount > 1 && (
+          <button
+            type="button"
+            onClick={() => removeActivity(dayIndex, blockIndex, activityIndex)}
+            className="focus-ring self-end text-[11px] font-semibold text-han-deep active:scale-[.97]"
+          >
+            Delete activity
+          </button>
+        )}
+      </div>
+    );
   }
 
   return (

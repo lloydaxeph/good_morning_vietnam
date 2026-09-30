@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { TopBar } from "../../components/TopBar";
+import { useDays } from "../../hooks/useDays";
 import { useTripStatus } from "../../hooks/useTripStatus";
 import { itineraryLink } from "../../lib/itineraryLink";
 import { CurrentCard } from "./CurrentCard";
@@ -7,7 +8,27 @@ import { PrevNextFooter } from "./PrevNextFooter";
 import { TripMessage } from "./TripMessage";
 
 export default function NowPage() {
-  const status = useTripStatus();
+  const { state } = useDays();
+  const days = state.kind === "ready" ? state.days : null;
+  const status = useTripStatus(days);
+
+  if (state.kind === "loading" || status === null) {
+    return (
+      <main className="h-dvh flex items-center justify-center px-6">
+        <p className="text-[13px] text-ink-soft">Loading…</p>
+      </main>
+    );
+  }
+
+  if (state.kind === "error") {
+    return (
+      <main className="h-dvh flex items-center justify-center px-6">
+        <p role="alert" className="text-[13px] text-han-deep">
+          {state.message}
+        </p>
+      </main>
+    );
+  }
 
   if (status.kind === "before") {
     return (

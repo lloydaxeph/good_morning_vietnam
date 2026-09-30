@@ -5,14 +5,57 @@ interface PagerProps {
   days: Day[];
   current: number;
   onGoTo: (index: number) => void;
+  isAdmin: boolean;
+  editing: boolean;
+  saving: boolean;
+  saveError: string | null;
+  onEditToggle: () => void;
+  onCancel: () => void;
 }
 
-export function Pager({ days, current, onGoTo }: PagerProps) {
+export function Pager({
+  days,
+  current,
+  onGoTo,
+  isAdmin,
+  editing,
+  saving,
+  saveError,
+  onEditToggle,
+  onCancel,
+}: PagerProps) {
   const atStart = current === 0;
   const atEnd = current === days.length - 1;
 
   return (
     <FooterBar>
+      {isAdmin && (
+        <div className="flex items-center gap-2 pointer-events-auto">
+          {editing && (
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={saving}
+              className="focus-ring flex items-center min-h-9 px-3.5 rounded-full border border-line text-[12.5px] font-semibold active:scale-[.97] disabled:opacity-60"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onEditToggle}
+            disabled={saving}
+            className="focus-ring flex items-center min-h-9 px-4 rounded-full bg-ink text-paper text-[12.5px] font-semibold tracking-wide shadow-card active:scale-[.97] disabled:opacity-60"
+          >
+            {saving ? "Saving…" : editing ? "Save" : "Edit"}
+          </button>
+        </div>
+      )}
+      {saveError && (
+        <p role="alert" className="text-[11px] text-han-deep px-4 text-center">
+          {saveError}
+        </p>
+      )}
       <div className="flex items-center gap-2 pointer-events-auto">
         <button
           type="button"

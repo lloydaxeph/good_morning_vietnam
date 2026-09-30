@@ -1,12 +1,10 @@
 import { useMemo } from "react";
-import { DAYS } from "../data/days";
 import { flattenBlocks, getTripStatus } from "../lib/schedule";
-import type { TripStatus } from "../types";
+import type { Day, TripStatus } from "../types";
 import { useNow } from "./useNow";
 
-const BLOCKS = flattenBlocks(DAYS);
-
-export function useTripStatus(): TripStatus {
+export function useTripStatus(days: Day[] | null): TripStatus | null {
   const now = useNow();
-  return useMemo(() => getTripStatus(BLOCKS, now), [now]);
+  const blocks = useMemo(() => (days ? flattenBlocks(days) : null), [days]);
+  return useMemo(() => (blocks ? getTripStatus(blocks, now) : null), [blocks, now]);
 }
