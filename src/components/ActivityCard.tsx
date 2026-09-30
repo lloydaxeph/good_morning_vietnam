@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useEdit } from "../features/itinerary/EditContext";
 import type { Activity, City } from "../types";
+import { ActivityDetailModal } from "./ActivityDetailModal";
 
 interface ActivityCardProps {
   activity: Activity;
@@ -22,6 +24,7 @@ export function ActivityCard({
   disabled = false,
 }: ActivityCardProps) {
   const { editing, updateActivity, removeActivity } = useEdit();
+  const [detailOpen, setDetailOpen] = useState(false);
   const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(
     `${activity.n} ${city} Vietnam`,
   )}`;
@@ -107,8 +110,8 @@ export function ActivityCard({
 
   return (
     <div
-      className={`activity-card flex flex-wrap items-stretch gap-2.5 rounded-card p-3 mb-2.5 select-none ${
-        disabled ? "opacity-50 grayscale cursor-not-allowed" : ""
+      className={`activity-card relative flex flex-wrap items-stretch gap-2.5 rounded-card p-3 mb-2.5 select-none ${
+        disabled ? "opacity-50 grayscale cursor-not-allowed" : "cursor-pointer"
       }`}
       aria-disabled={disabled}
     >
@@ -129,9 +132,20 @@ export function ActivityCard({
       </div>
 
       <div className="flex-1 min-w-0 flex flex-col justify-center gap-[3px]">
-        <div className="text-[15px] font-bold leading-tight">{activity.n}</div>
+        {disabled ? (
+          <div className="text-[15px] font-bold leading-tight">{activity.n}</div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setDetailOpen(true)}
+            aria-haspopup="dialog"
+            className="focus-ring self-start text-left text-[15px] font-bold leading-tight after:absolute after:inset-0 after:content-['']"
+          >
+            {activity.n}
+          </button>
+        )}
         <div className="text-[12.5px] leading-snug text-ink-soft">{activity.d}</div>
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="relative z-10 flex items-center gap-2.5 flex-wrap">
           {googleMapsUrl && !disabled && (
             <a
               href={googleMapsUrl}
@@ -164,6 +178,14 @@ export function ActivityCard({
           )}
         </div>
       </div>
+      {detailOpen && (
+        <ActivityDetailModal
+          activity={activity}
+          googleMapsUrl={googleMapsUrl}
+          googleImagesUrl={googleImagesUrl}
+          onClose={() => setDetailOpen(false)}
+        />
+      )}
     </div>
   );
 }
