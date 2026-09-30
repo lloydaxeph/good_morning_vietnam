@@ -5,6 +5,7 @@ import { useAdminSession } from "../admin/useAdminSession";
 import { useDays } from "../../hooks/useDays";
 import { getAdminToken } from "../../lib/adminSession";
 import { saveDays } from "../../lib/daysApi";
+import { sortBlocksByTime } from "../../lib/sortBlocks";
 import type { Day } from "../../types";
 import { Book, type BookHandle } from "./Book";
 import { EditProvider } from "./EditContext";
@@ -79,8 +80,9 @@ export default function ItineraryPage() {
     setSaving(true);
     setSaveError(null);
     try {
-      await saveDays(token, draft);
-      setDays(draft);
+      const sorted = sortBlocksByTime(draft);
+      await saveDays(token, sorted);
+      setDays(sorted);
       setEditing(false);
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Couldn't save.");
