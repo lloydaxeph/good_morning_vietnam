@@ -4,6 +4,7 @@ import { useDays } from "../../hooks/useDays";
 import { useTripStatus } from "../../hooks/useTripStatus";
 import { itineraryLink } from "../../lib/itineraryLink";
 import { CurrentCard } from "./CurrentCard";
+import { PhotoSlideshow } from "./PhotoSlideshow";
 import { PrevNextFooter } from "./PrevNextFooter";
 import { TripMessage } from "./TripMessage";
 
@@ -35,6 +36,7 @@ export default function NowPage() {
       <TripMessage
         eyebrow="Vietnam 2026"
         title={`Upcoming Trip in ${status.weeks} ${status.weeks === 1 ? "week" : "weeks"}`}
+        above={<PhotoSlideshow days={days ?? []} />}
       >
         <Link
           to={itineraryLink(0)}
