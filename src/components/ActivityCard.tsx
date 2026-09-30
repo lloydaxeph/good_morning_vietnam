@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { useEdit } from "../features/itinerary/EditContext";
 import type { Activity, City } from "../types";
-import { Gallery } from "./Gallery";
 
 interface ActivityCardProps {
   activity: Activity;
@@ -10,7 +8,7 @@ interface ActivityCardProps {
   blockIndex: number;
   activityIndex: number;
   activityCount: number;
-  /** Greys out the card and blocks expand/links when the plan isn't confirmed yet */
+  /** Greys out the card and blocks links when the plan isn't confirmed yet */
   disabled?: boolean;
 }
 
@@ -23,7 +21,6 @@ export function ActivityCard({
   activityCount,
   disabled = false,
 }: ActivityCardProps) {
-  const [expanded, setExpanded] = useState(false);
   const { editing, updateActivity, removeActivity } = useEdit();
   const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(
     `${activity.n} ${city} Vietnam`,
@@ -31,11 +28,6 @@ export function ActivityCard({
   const googleMapsUrl = activity.loc
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.loc)}`
     : null;
-
-  function toggleExpand() {
-    if (disabled) return;
-    setExpanded((v) => !v);
-  }
 
   function patch(fields: Partial<Activity>) {
     updateActivity(dayIndex, blockIndex, activityIndex, fields);
@@ -105,21 +97,10 @@ export function ActivityCard({
 
   return (
     <div
-      className={`activity-card focus-ring flex flex-wrap items-stretch gap-2.5 rounded-card p-3 mb-2.5 select-none ${
-        disabled ? "opacity-50 grayscale cursor-not-allowed" : "cursor-pointer"
-      } ${expanded ? "expanded" : ""}`}
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      aria-expanded={expanded}
+      className={`activity-card flex flex-wrap items-stretch gap-2.5 rounded-card p-3 mb-2.5 select-none ${
+        disabled ? "opacity-50 grayscale cursor-not-allowed" : ""
+      }`}
       aria-disabled={disabled}
-      onClick={toggleExpand}
-      onKeyDown={(e) => {
-        if (disabled) return;
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          toggleExpand();
-        }
-      }}
     >
       <div className="activity-thumb flex-none w-20 h-20 self-center rounded-lg overflow-hidden bg-black/[.06]">
         {activity.thumb ? (
@@ -147,7 +128,6 @@ export function ActivityCard({
               target="_blank"
               rel="noopener noreferrer"
               className="gallery-more focus-ring self-start inline-block text-[12px] font-bold pb-px"
-              onClick={(e) => e.stopPropagation()}
             >
               Open in maps 📍
             </a>
@@ -158,29 +138,22 @@ export function ActivityCard({
               target="_blank"
               rel="noopener noreferrer"
               className="gallery-more focus-ring self-start inline-block text-[12px] font-bold pb-px"
-              onClick={(e) => e.stopPropagation()}
             >
               Visit Page 🌐
             </a>
           )}
+          {!disabled && (
+            <a
+              href={googleImagesUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gallery-more focus-ring self-start inline-block text-[12px] font-bold pb-px"
+            >
+              See more images on Google →
+            </a>
+          )}
         </div>
       </div>
-
-      {expanded && !disabled && (
-        <div className="basis-full">
-          <Gallery name={activity.n} images={activity.im ?? []} googleImagesUrl={googleImagesUrl} />
-        </div>
-      )}
-
-      {!disabled && (
-      <div
-        className="expandbar basis-full flex items-center justify-center gap-1.5 min-h-[26px] -mx-3 -mb-3 mt-1.5 rounded-b-[12px]"
-        aria-hidden="true"
-      >
-        <span className="text-[11px] font-semibold">Images</span>
-        <span className="arrow text-[8px]">▼</span>
-      </div>
-      )}
     </div>
   );
 }

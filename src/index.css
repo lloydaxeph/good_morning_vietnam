@@ -124,24 +124,6 @@
     border-radius: theme("borderRadius.card");
     box-shadow: theme("boxShadow.card");
   }
-  .activity-card .expandbar {
-    background: var(--tint);
-    border-top: 1px dashed theme("colors.line");
-    color: var(--accent-deep);
-  }
-  .activity-card .arrow {
-    transition: transform 0.2s;
-  }
-  .activity-card.expanded .arrow {
-    transform: rotate(180deg);
-  }
-
-  .gallery-imgs {
-    scroll-snap-type: x proximity;
-  }
-  .gallery-imgs img {
-    scroll-snap-align: start;
-  }
   .gallery-more {
     color: var(--accent-deep);
     border-bottom: 1.5px solid var(--accent);
